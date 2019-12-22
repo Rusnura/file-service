@@ -26,19 +26,11 @@ public class FileService {
         this.baseDirectory = new File(baseDirectoryPropertyValue);
     }
 
-    public List<service.models.File> getFiles(String path) throws IllegalAccessException, IOException {
+    public List<service.models.File> getFiles(String path) throws IOException {
         File directory = new File(baseDirectory, path);
-        if (!directory.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
-            throw new IllegalAccessException("Directory: " + path + " isn't allowed!");
-
-        if (!directory.exists())
-            throw new IllegalAccessException("Directory: " + path + " doesn't exists!");
-
-        if (!directory.canRead())
-            throw new IllegalAccessException("Directory: " + path + " doesn't readable!");
-
+        checkAvailability(baseDirectory, directory);
         if (!directory.isDirectory())
-            throw new IllegalAccessException(path + " isn't directory, but file!");
+            throw new IOException(directory.getName() + " isn't directory, but file!");
 
         File[] directoryFiles = directory.listFiles();
         List<service.models.File> files = new LinkedList<>();
@@ -48,5 +40,19 @@ public class FileService {
             }
         }
         return files;
+    }
+
+    private void checkAvailability(File baseDirectory, File file) throws IOException {
+        if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
+            throw new IOException("Base directory isn't available!");
+
+        if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
+            throw new IOException("File: " + file.getName() + " isn't allowed!");
+
+        if (!file.exists())
+            throw new IOException("File: " + file.getName() + " doesn't exists!");
+
+        if (!file.canRead())
+            throw new IOException("File: " + file.getName() + " doesn't readable!");
     }
 }
