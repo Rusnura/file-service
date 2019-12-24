@@ -1,19 +1,13 @@
 package service.services;
 
+import com.sun.istack.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -28,9 +22,7 @@ public class FileService {
 
     public List<service.models.File> getFiles(String path, boolean showHiddenFiles) throws IOException {
         File directory = new File(baseDirectory, path);
-        checkAvailability(baseDirectory, directory);
-        if (!directory.isDirectory())
-            throw new IOException(directory.getName() + " isn't directory, but file!");
+        checkAvailability(baseDirectory, directory, true);
 
         File[] directoryFiles = directory.listFiles();
         List<service.models.File> files = new LinkedList<>();
@@ -44,7 +36,13 @@ public class FileService {
         return files;
     }
 
-    private void checkAvailability(File baseDirectory, File file) throws IOException {
+    public service.models.File getFile(String path) throws IOException {
+        File file = new File(baseDirectory, path);
+        checkAvailability(baseDirectory, file, false);
+        return new service.models.File(file);
+    }
+
+    private void checkAvailability(File baseDirectory, File file, @Nullable Boolean itsDirectory) throws IOException {
         if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
             throw new IOException("Base directory isn't available!");
 
@@ -56,5 +54,12 @@ public class FileService {
 
         if (!file.canRead())
             throw new IOException("File: " + file.getName() + " doesn't readable!");
+
+        if (itsDirectory != null) {
+            if (itsDirectory && !file.isDirectory())
+                throw new IOException(file.getName() + " isn't directory, but file!");
+            else if (!itsDirectory && !file.isFile())
+                throw new IOException(file.getName() + " isn't file, but directory!");
+        }
     }
 }
