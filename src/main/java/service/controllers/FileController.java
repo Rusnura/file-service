@@ -13,7 +13,7 @@ public class FileController {
     private FileService fileService;
 
     @GetMapping("/files")
-    public ResponseEntity<?> getFiles(@RequestParam String path) throws Exception {
-        return ResponseEntity.ok(fileService.getFiles(path));
+    public ResponseEntity<?> getFiles(@RequestParam String path, @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
+        return ResponseEntity.ok(fileService.getFiles(path, showHidden));
     }
 }

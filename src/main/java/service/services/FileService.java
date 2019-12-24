@@ -26,7 +26,7 @@ public class FileService {
         this.baseDirectory = new File(baseDirectoryPropertyValue);
     }
 
-    public List<service.models.File> getFiles(String path) throws IOException {
+    public List<service.models.File> getFiles(String path, boolean showHiddenFiles) throws IOException {
         File directory = new File(baseDirectory, path);
         checkAvailability(baseDirectory, directory);
         if (!directory.isDirectory())
@@ -36,7 +36,9 @@ public class FileService {
         List<service.models.File> files = new LinkedList<>();
         if (directoryFiles != null) {
             for (File file : directoryFiles) {
-                files.add(new service.models.File(file));
+                if (showHiddenFiles || !file.isHidden()) {
+                    files.add(new service.models.File(file));
+                }
             }
         }
         return files;
