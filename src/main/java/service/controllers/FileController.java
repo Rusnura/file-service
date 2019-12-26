@@ -55,7 +55,6 @@ public class FileController {
 
     @DeleteMapping(value = "/file")
     public ResponseEntity<?> deleteFile(@RequestParam String path) throws IOException {
-        fileService.deleteFile(path);
-        return ResponseEntity.ok().build();
+        return (fileService.deleteFile(path) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
     }
 }

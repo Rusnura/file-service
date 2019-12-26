@@ -24,8 +24,7 @@ public class FileService {
     }
 
     public service.models.File putFile(String path, MultipartFile file, boolean override) throws IOException {
-        File directory = new File(baseDirectory, path);
-        checkAvailability(directory, true);
+        File directory = checkAvailability(path, true);
         String originalFileName = file.getOriginalFilename();
         if (StringUtils.isEmpty(originalFileName) || StringUtils.isEmpty(originalFileName.trim()))
             throw new IllegalArgumentException("Request doesn't contains 'originalFilename'!");
@@ -38,8 +37,7 @@ public class FileService {
     }
 
     public List<service.models.File> getFiles(String path, boolean showHiddenFiles) throws IOException {
-        File directory = new File(baseDirectory, path);
-        checkAvailability(directory, true);
+        File directory = checkAvailability(path, true);
 
         File[] directoryFiles = directory.listFiles();
         List<service.models.File> files = new LinkedList<>();
@@ -54,18 +52,17 @@ public class FileService {
     }
 
     public service.models.File getFile(String path) throws IOException {
-        File file = new File(baseDirectory, path);
-        checkAvailability(file, false);
+        File file = checkAvailability(path, false);
         return new service.models.File(file);
     }
 
     public boolean deleteFile(String path) throws IOException {
-        File file = new File(baseDirectory, path);
-        checkAvailability(file, false);
+        File file = checkAvailability(path, false);
         return file.delete();
     }
 
-    private void checkAvailability(File file, @Nullable Boolean itsDirectory) throws IOException {
+    private File checkAvailability(String path, @Nullable Boolean itsDirectory) throws IOException {
+        File file = new File(baseDirectory, path);
         if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
             throw new IOException("Base directory isn't available!");
 
@@ -84,5 +81,6 @@ public class FileService {
             else if (!itsDirectory && !file.isFile())
                 throw new IOException(file.getName() + " isn't file, but directory!");
         }
+        return file;
     }
 }
