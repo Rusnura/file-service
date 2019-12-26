@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +51,11 @@ public class FileController {
         } catch (FileExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+
+    @DeleteMapping(value = "/file")
+    public ResponseEntity<?> deleteFile(@RequestParam String path) throws IOException {
+        fileService.deleteFile(path);
+        return ResponseEntity.ok().build();
     }
 }

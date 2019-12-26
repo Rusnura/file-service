@@ -59,6 +59,12 @@ public class FileService {
         return new service.models.File(file);
     }
 
+    public boolean deleteFile(String path) throws IOException {
+        File file = new File(baseDirectory, path);
+        checkAvailability(file, false);
+        return file.delete();
+    }
+
     private void checkAvailability(File file, @Nullable Boolean itsDirectory) throws IOException {
         if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
             throw new IOException("Base directory isn't available!");
