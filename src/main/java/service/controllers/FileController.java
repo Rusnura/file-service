@@ -2,9 +2,8 @@ package service.controllers;
 
 import com.sun.istack.NotNull;
 import org.apache.commons.io.FileExistsException;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import service.services.FileService;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
@@ -33,13 +34,13 @@ public class FileController {
     }
 
     @GetMapping("/file")
-    public ResponseEntity<?> getFile(@RequestParam String path) throws IOException {
-        service.models.File file = fileService.getFile(path);
-        return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-            .contentLength(file.getFileSize())
-            .contentType(MediaType.asMediaType(MimeType.valueOf(file.getMimeType())))
-            .body(new ByteArrayResource(FileUtils.readFileToByteArray(file.getFile())));
+    public void getFile(HttpServletResponse response, @RequestParam String path) throws IOException {
+		service.models.File file = fileService.getFile(path);
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
+		response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
+		response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.asMediaType(MimeType.valueOf(file.getMimeType())).toString());
+		IOUtils.copy(new FileInputStream(file.getFile()), response.getOutputStream());
     }
 
     @PostMapping(value = "/file", consumes = "multipart/form-data")
