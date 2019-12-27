@@ -24,8 +24,8 @@ public class File {
         this.isDirectory = file.isDirectory();
         this.isFile = file.isFile();
         if (isFile) {
-          this.extension = FilenameUtils.getExtension(file.getAbsolutePath());
-          this.fileSize = FileUtils.sizeOf(file);
+        	this.extension = FilenameUtils.getExtension(file.getAbsolutePath());
+        	this.fileSize = FileUtils.sizeOf(file);
         }
         this.isHidden = file.isHidden();
         this.isReadable = file.canRead();
