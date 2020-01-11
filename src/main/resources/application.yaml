@@ -1,5 +1,8 @@
 server:
   port: 8081
+  upload:
+    max-file-size-mb: 150
+    max-request-size-mb: 150
 
 service:
-  base-dir: D:\Music
+  base-dir: D:\Music\SERVER
