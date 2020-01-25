@@ -23,8 +23,8 @@ public class FileService {
         this.baseDirectory = new File(baseDirectoryPropertyValue);
     }
 
-    public service.models.File putFile(String path, MultipartFile file, boolean override) throws IOException {
-        File directory = checkAvailability(path, true);
+    public service.models.File putFile(String path, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
+        File directory = checkAvailability(path, true, createParentFolders);
         String originalFileName = file.getOriginalFilename();
         if (StringUtils.isEmpty(originalFileName) || StringUtils.isEmpty(originalFileName.trim()))
             throw new IllegalArgumentException("Request doesn't contains 'originalFilename'!");
@@ -62,6 +62,10 @@ public class FileService {
     }
 
     private File checkAvailability(String path, @Nullable Boolean itsDirectory) throws IOException {
+    	return this.checkAvailability(path, itsDirectory, false);
+	}
+
+    private File checkAvailability(String path, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
         File file = new File(baseDirectory, path);
         if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
             throw new IOException("Base directory isn't available!");
@@ -69,8 +73,11 @@ public class FileService {
         if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
             throw new IOException("File: " + file.getName() + " isn't allowed!");
 
-        if (!file.exists())
-            throw new IOException("File: " + file.getName() + " doesn't exists!");
+        if (!file.exists()) {
+        	if (!createParentFolders)
+        		throw new IOException("File: " + file.getName() + " doesn't exists!");
+        	file.mkdirs();
+		}
 
         if (!file.canRead())
             throw new IOException("File: " + file.getName() + " doesn't readable!");

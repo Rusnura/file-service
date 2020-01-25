@@ -40,15 +40,18 @@ public class FileController {
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
 		response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
 		response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.asMediaType(MimeType.valueOf(file.getMimeType())).toString());
-		IOUtils.copy(new FileInputStream(file.getFile()), response.getOutputStream());
+		try (FileInputStream fis = new FileInputStream(file.getFile())) {
+			IOUtils.copy(fis, response.getOutputStream());
+		}
     }
 
     @PostMapping(value = "/file", consumes = "multipart/form-data")
     public ResponseEntity<service.models.File> create(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
                                                       @RequestParam String path,
-                                                      @RequestParam(defaultValue = "false") boolean override) throws IOException {
+                                                      @RequestParam(defaultValue = "false") boolean override,
+													  @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
         try {
-            return ResponseEntity.ok(fileService.putFile(path, file, override));
+            return ResponseEntity.ok(fileService.putFile(path, file, override, createParentFolders));
         } catch (FileExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
