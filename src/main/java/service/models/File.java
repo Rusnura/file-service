@@ -1,10 +1,10 @@
 package service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 public class File {

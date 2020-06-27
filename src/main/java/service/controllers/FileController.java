@@ -1,6 +1,5 @@
 package service.controllers;
 
-import com.sun.istack.NotNull;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import service.services.FileService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.FileInputStream;
 import java.io.IOException;
 
