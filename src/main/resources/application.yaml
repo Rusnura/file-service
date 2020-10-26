@@ -5,4 +5,4 @@ server:
     max-request-size-mb: 150
 
 service:
-  base-dir: /mnt/HDD1/MusicX
+  base-dir: D:\\, D:\\Music, D:\\Games
