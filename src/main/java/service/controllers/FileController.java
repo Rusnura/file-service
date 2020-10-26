@@ -26,13 +26,13 @@ public class FileController {
   }
 
   @GetMapping("/files")
-  public ResponseEntity<?> getFiles(@RequestParam String parent, @RequestParam(defaultValue = "/") String path, @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
-    return ResponseEntity.ok(fileService.getFiles(parent, path, showHidden));
+  public ResponseEntity<?> getFiles(@RequestParam(defaultValue = "/") String path, @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
+    return ResponseEntity.ok(fileService.getFiles(path, showHidden));
   }
 
   @GetMapping("/file")
-  public void getFile(HttpServletResponse response, @RequestParam String parent, @RequestParam String path) throws IOException {
-    service.models.File file = fileService.getFile(parent, path);
+  public void getFile(HttpServletResponse response, @RequestParam String path) throws IOException {
+    service.models.File file = fileService.getFile(path);
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
     response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
@@ -44,19 +44,18 @@ public class FileController {
 
   @PostMapping(value = "/file", consumes = "multipart/form-data")
   public ResponseEntity<service.models.File> create(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
-                                                    @RequestParam String parent,
                                                     @RequestParam String path,
                                                     @RequestParam(defaultValue = "false") boolean override,
                                                     @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
     try {
-      return ResponseEntity.ok(fileService.putFile(parent, path, file, override, createParentFolders));
+      return ResponseEntity.ok(fileService.putFile(path, file, override, createParentFolders));
     } catch (FileExistsException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
 
   @DeleteMapping(value = "/file")
-  public ResponseEntity<?> deleteFile(@RequestParam String parent, @RequestParam String path) throws IOException {
-    return (fileService.deleteFile(parent, path) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
+  public ResponseEntity<?> deleteFile(@RequestParam String path) throws IOException {
+    return (fileService.deleteFile(path) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
   }
 }

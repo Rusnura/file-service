@@ -30,8 +30,8 @@ public class FileService {
     }
   }
 
-  public service.models.File putFile(String parent, String path, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
-    File directory = checkAvailability(parent, path, true, createParentFolders);
+  public service.models.File putFile(String path, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
+    File directory = checkAvailability(path, true, createParentFolders);
     String originalFileName = file.getOriginalFilename();
     if (StringUtils.isEmpty(originalFileName) || StringUtils.isEmpty(originalFileName.trim()))
       throw new IllegalArgumentException("Request doesn't contains 'originalFilename'!");
@@ -43,10 +43,10 @@ public class FileService {
     return new service.models.File(newFile);
   }
 
-  public List<service.models.File> getFiles(String parent, String path, boolean showHiddenFiles) throws IOException {
+  public List<service.models.File> getFiles(String path, boolean showHiddenFiles) throws IOException {
     List<service.models.File> files = new ArrayList<>();
-    if (!parent.equals("/")) {
-      File directory = checkAvailability(parent, path, true);
+    if (!path.equals("/")) {
+      File directory = checkAvailability(path, true);
 
       File[] directoryFiles = directory.listFiles();
       if (directoryFiles != null) {
@@ -64,28 +64,29 @@ public class FileService {
     return files;
   }
 
-  public service.models.File getFile(String parent, String path) throws IOException {
-    File file = checkAvailability(parent, path, false);
+  public service.models.File getFile(String path) throws IOException {
+    File file = checkAvailability(path, false);
     return new service.models.File(file);
   }
 
-  public boolean deleteFile(String parent, String path) throws IOException {
-    File file = checkAvailability(parent, path, false);
+  public boolean deleteFile(String path) throws IOException {
+    File file = checkAvailability(path, false);
     return file.delete();
   }
 
-  private File checkAvailability(String parent, String path, @Nullable Boolean itsDirectory) throws IOException {
-    return this.checkAvailability(parent, path, itsDirectory, false);
+  private File checkAvailability(String path, @Nullable Boolean itsDirectory) throws IOException {
+    return this.checkAvailability(path, itsDirectory, false);
   }
 
-  private File checkAvailability(String parent, String path, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
-    if (!baseDirectories.containsKey(parent)) {
-      throw new IOException("Base directory " + parent + " isn't available!");
+  private File checkAvailability(String path, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
+    File baseDirectory = null;
+    for (Map.Entry<String, File> directory : baseDirectories.entrySet()) {
+      if (path.contains(directory.getKey()))
+        baseDirectory = directory.getValue();
     }
 
-    File baseDirectory = baseDirectories.get(parent);
-    if (!baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
-      throw new IOException("Base directory " + parent + " isn't available!");
+    if (baseDirectory == null || !baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
+      throw new IOException("Base directory " + path + " isn't available!");
 
     File file = new File(baseDirectory, path);
 
