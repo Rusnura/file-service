@@ -21,7 +21,7 @@ public class File {
 
   public File(@NotNull java.io.File file) {
     this.file = file;
-    this.name = (file.getName().isEmpty() ? file.getPath() : file.getName());
+    this.name = file.getName();
     this.isDirectory = file.isDirectory();
     this.isFile = file.isFile();
     if (isFile) {

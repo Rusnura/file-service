@@ -21,12 +21,12 @@ public class FileService {
   @PostConstruct
   private void init() {
     for (String path: baseDirectoriesPropertyValue) {
-      File file = new File(path);
-      if (!file.exists() || !file.canRead()) {
+      File file = new File(path.trim());
+      if (!file.exists() || !file.canRead() || file.getName().isEmpty()) {
         System.err.println("File " + path + " isn't exists or not readable!");
         continue;
       }
-      this.baseDirectories.put(StringUtils.isEmpty(file.getName()) ? file.getPath() : file.getName(), file);
+      this.baseDirectories.put(file.getName(), file);
     }
   }
 
