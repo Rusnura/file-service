@@ -88,8 +88,7 @@ public class FileService {
     if (baseDirectory == null || !baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
       throw new IOException("Base directory " + path + " isn't available!");
 
-    File file = new File(baseDirectory, path);
-
+    File file = new File(baseDirectory, path.replace(baseDirectory.getName(), ""));
     if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
       throw new IOException("File: " + file.getName() + " isn't allowed!");
 
