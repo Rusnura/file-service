@@ -1,27 +1,46 @@
 package service.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
 public class FileService {
-  @Value("#{'${service.base-dir}'.split(',')}")
+  private static final String DIRECTORIES_NODE = "directories";
+  private static final String DIRECTORY_PATH_NODE = "path";
   private List<String> baseDirectoriesPropertyValue;
   private final Map<String, File> baseDirectories = new HashMap<>();
 
+  @Value("${service.config.file}")
+  private String configFilePath;
+
+  @Autowired
+  private ObjectMapper objectMapper;
+
   @PostConstruct
-  private void init() {
-    for (String path: baseDirectoriesPropertyValue) {
-      File file = new File(path.trim());
+  private void init() throws IOException {
+    JsonNode properties;
+    JsonNode directories = objectMapper.createObjectNode();
+    try (InputStream configFileInputStream = getClass().getResourceAsStream(configFilePath)) {
+      properties = objectMapper.readTree(configFileInputStream);
+      if (properties.has(DIRECTORIES_NODE)) directories = properties.get(DIRECTORIES_NODE);
+    }
+
+    for (JsonNode directory: directories) {
+      if (!directory.has(DIRECTORY_PATH_NODE)) continue;
+      String path = directory.get(DIRECTORY_PATH_NODE).asText().trim();
+      File file = new File(path);
       if (!file.exists() || !file.canRead() || file.getName().isEmpty()) {
         System.err.println("File " + path + " isn't exists or not readable!");
         continue;

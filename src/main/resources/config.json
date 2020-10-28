@@ -1,0 +1,11 @@
+{
+  "directories": [{
+    "path": "D:\\Directory1",
+    "password": "TODO",
+    "hidden": "TODO"
+  }, {
+    "path": "D:\\Directory2"
+  }, {
+    "path": "D:\\Directory3"
+  }]
+}
