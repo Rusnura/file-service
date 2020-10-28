@@ -19,7 +19,6 @@ import java.util.*;
 public class FileService {
   private static final String DIRECTORIES_NODE = "directories";
   private static final String DIRECTORY_PATH_NODE = "path";
-  private List<String> baseDirectoriesPropertyValue;
   private final Map<String, File> baseDirectories = new HashMap<>();
 
   @Value("${service.config.file}")
