@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import service.models.FileEntity;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +20,8 @@ import java.util.*;
 public class FileService {
   private static final String DIRECTORIES_NODE = "directories";
   private static final String DIRECTORY_PATH_NODE = "path";
-  private final Map<String, File> baseDirectories = new HashMap<>();
+  private static final String DIRECTORY_PASSWORD_NODE = "password";
+  private final Map<String, FileEntity> baseDirectories = new HashMap<>();
 
   @Value("${service.config.file}")
   private String configFilePath;
@@ -39,7 +41,10 @@ public class FileService {
     for (JsonNode directory: directories) {
       if (!directory.has(DIRECTORY_PATH_NODE)) continue;
       String path = directory.get(DIRECTORY_PATH_NODE).asText().trim();
-      File file = new File(path);
+      String password = null;
+      if (directory.has(DIRECTORY_PASSWORD_NODE))
+        password = directory.get(DIRECTORY_PATH_NODE).asText();
+      FileEntity file = new FileEntity(path, password);
       if (!file.exists() || !file.canRead() || file.getName().isEmpty()) {
         System.err.println("File " + path + " isn't exists or not readable!");
         continue;
@@ -48,8 +53,8 @@ public class FileService {
     }
   }
 
-  public service.models.File putFile(String path, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
-    File directory = checkAvailability(path, true, createParentFolders);
+  public FileEntity putFile(String path, String password, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
+    File directory = checkAvailability(path, password, true, createParentFolders);
     String originalFileName = file.getOriginalFilename();
     if (StringUtils.isEmpty(originalFileName) || StringUtils.isEmpty(originalFileName.trim()))
       throw new IllegalArgumentException("Request doesn't contains 'originalFilename'!");
@@ -58,47 +63,47 @@ public class FileService {
     if (!override && newFile.exists())
       throw new FileExistsException("File: " + originalFileName + " already exists");
     file.transferTo(newFile);
-    return new service.models.File(newFile);
+    return new FileEntity(newFile.getPath(), null);
   }
 
-  public List<service.models.File> getFiles(String path, boolean showHiddenFiles) throws IOException {
-    List<service.models.File> files = new ArrayList<>();
+  public List<FileEntity> getFiles(String path, String password, boolean showHiddenFiles) throws IOException {
+    List<FileEntity> files = new ArrayList<>();
     if (!path.equals("/")) {
-      File directory = checkAvailability(path, true);
+      File directory = checkAvailability(path, password, true);
 
       File[] directoryFiles = directory.listFiles();
       if (directoryFiles != null) {
         for (File file : directoryFiles) {
           if (showHiddenFiles || !file.isHidden()) {
-            files.add(new service.models.File(file));
+            files.add(new FileEntity(file.getPath(), null));
           }
         }
       }
     } else {
-      for (Map.Entry<String, File> baseDirectory : baseDirectories.entrySet()) {
-        files.add(new service.models.File(baseDirectory.getValue()));
+      for (Map.Entry<String, FileEntity> baseDirectory : baseDirectories.entrySet()) {
+        files.add(baseDirectory.getValue());
       }
     }
     return files;
   }
 
-  public service.models.File getFile(String path) throws IOException {
-    File file = checkAvailability(path, false);
-    return new service.models.File(file);
+  public FileEntity getFile(String path, String password) throws IOException {
+    File file = checkAvailability(path, password, false);
+    return new FileEntity(file.getPath(), null);
   }
 
-  public boolean deleteFile(String path) throws IOException {
-    File file = checkAvailability(path, false);
+  public boolean deleteFile(String path, String password) throws IOException {
+    File file = checkAvailability(path, password, false);
     return file.delete();
   }
 
-  private File checkAvailability(String path, @Nullable Boolean itsDirectory) throws IOException {
-    return this.checkAvailability(path, itsDirectory, false);
+  private File checkAvailability(String path, String password, @Nullable Boolean itsDirectory) throws IOException {
+    return this.checkAvailability(path, password, itsDirectory, false);
   }
 
-  private File checkAvailability(String path, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
-    File baseDirectory = null;
-    for (Map.Entry<String, File> directory : baseDirectories.entrySet()) {
+  private File checkAvailability(String path, String password, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
+    FileEntity baseDirectory = null;
+    for (Map.Entry<String, FileEntity> directory : baseDirectories.entrySet()) {
       if (path.contains(directory.getKey()))
         baseDirectory = directory.getValue();
     }
