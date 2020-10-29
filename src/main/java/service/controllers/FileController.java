@@ -40,7 +40,7 @@ public class FileController {
     FileEntity file = fileService.getFile(path, password);
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
-    response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getTotalSpace()));
+    response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
     response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.asMediaType(MimeType.valueOf(file.getMimeType())).toString());
     try (FileInputStream fis = new FileInputStream(file)) {
       IOUtils.copy(fis, response.getOutputStream());

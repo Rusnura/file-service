@@ -25,6 +25,10 @@ public class FileEntity extends File {
     return FilenameUtils.getExtension(this.getAbsolutePath());
   }
 
+  public long getFileSize() {
+    return isFile() ? FileUtils.sizeOf(this) : 0;
+  }
+
   @JsonIgnore
   public String getMimeType() throws IOException {
     return new Tika().detect(this);
