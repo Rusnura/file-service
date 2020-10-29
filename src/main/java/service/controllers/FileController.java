@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import service.models.FileEntity;
 import service.services.FileService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -26,36 +27,42 @@ public class FileController {
   }
 
   @GetMapping("/files")
-  public ResponseEntity<?> getFiles(@RequestParam(defaultValue = "/") String path, @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
-    return ResponseEntity.ok(fileService.getFiles(path, showHidden));
+  public ResponseEntity<?> getFiles(@RequestParam(defaultValue = "/") String path,
+                                    @RequestParam(defaultValue = "") String password,
+                                    @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
+    return ResponseEntity.ok(fileService.getFiles(path, password, showHidden));
   }
 
   @GetMapping("/file")
-  public void getFile(HttpServletResponse response, @RequestParam String path) throws IOException {
-    service.models.File file = fileService.getFile(path);
+  public void getFile(HttpServletResponse response,
+                      @RequestParam String path,
+                      @RequestParam(defaultValue = "") String password) throws IOException {
+    FileEntity file = fileService.getFile(path, password);
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
-    response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
+    response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getTotalSpace()));
     response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.asMediaType(MimeType.valueOf(file.getMimeType())).toString());
-    try (FileInputStream fis = new FileInputStream(file.getFile())) {
+    try (FileInputStream fis = new FileInputStream(file)) {
       IOUtils.copy(fis, response.getOutputStream());
     }
   }
 
   @PostMapping(value = "/file", consumes = "multipart/form-data")
-  public ResponseEntity<service.models.File> create(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
-                                                    @RequestParam String path,
-                                                    @RequestParam(defaultValue = "false") boolean override,
-                                                    @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
+  public ResponseEntity<FileEntity> create(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
+                                           @RequestParam String path,
+                                           @RequestParam(defaultValue = "") String password,
+                                           @RequestParam(defaultValue = "false") boolean override,
+                                           @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
     try {
-      return ResponseEntity.ok(fileService.putFile(path, file, override, createParentFolders));
+      return ResponseEntity.ok(fileService.putFile(path, password, file, override, createParentFolders));
     } catch (FileExistsException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
 
   @DeleteMapping(value = "/file")
-  public ResponseEntity<?> deleteFile(@RequestParam String path) throws IOException {
-    return (fileService.deleteFile(path) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
+  public ResponseEntity<?> deleteFile(@RequestParam String path,
+                                      @RequestParam(defaultValue = "") String password) throws IOException {
+    return (fileService.deleteFile(path, password) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
   }
 }
