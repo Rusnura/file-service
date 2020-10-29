@@ -43,7 +43,7 @@ public class FileService {
       String path = directory.get(DIRECTORY_PATH_NODE).asText().trim();
       String password = null;
       if (directory.has(DIRECTORY_PASSWORD_NODE))
-        password = directory.get(DIRECTORY_PATH_NODE).asText();
+        password = directory.get(DIRECTORY_PASSWORD_NODE).asText();
       FileEntity file = new FileEntity(path, password);
       if (!file.exists() || !file.canRead() || file.getName().isEmpty()) {
         System.err.println("File " + path + " isn't exists or not readable!");
@@ -110,6 +110,9 @@ public class FileService {
 
     if (baseDirectory == null || !baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
       throw new IOException("Base directory " + path + " isn't available!");
+
+    if (!StringUtils.isEmpty(baseDirectory.getPassword()) && !password.equals(baseDirectory.getPassword()))
+      throw new SecurityException("Password for directory " + path + " doesn't match!");
 
     File file = new File(baseDirectory, path.replace(baseDirectory.getName(), ""));
     if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
