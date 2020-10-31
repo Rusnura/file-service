@@ -34,4 +34,13 @@ public class RestControllerExceptionAdvice extends ResponseEntityExceptionHandle
     errorObjectNode.put("error", ex.getMessage());
     return handleExceptionInternal(ex, errorObjectNode, new HttpHeaders(), status, request);
   }
+
+  @ExceptionHandler(value = IllegalArgumentException.class)
+  protected ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    ObjectNode errorObjectNode = objectMapper.createObjectNode();
+    errorObjectNode.put("status", status.value());
+    errorObjectNode.put("error", ex.getMessage());
+    return handleExceptionInternal(ex, errorObjectNode, new HttpHeaders(), status, request);
+  }
 }
