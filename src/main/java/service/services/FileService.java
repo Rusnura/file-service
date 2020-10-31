@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import service.models.FileEntity;
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -109,10 +110,10 @@ public class FileService {
     }
 
     if (baseDirectory == null || !baseDirectory.exists() || !baseDirectory.canRead() || !baseDirectory.isDirectory())
-      throw new IOException("Base directory " + path + " isn't available!");
+      throw new FileNotFoundException("Base directory " + path + " isn't available!");
 
     if (!StringUtils.isEmpty(baseDirectory.getPassword()) && !password.equals(baseDirectory.getPassword()))
-      throw new SecurityException("Password for directory " + path + " doesn't match!");
+      throw new SecurityException("Wrong password for directory " + path + "!");
 
     File file = new File(baseDirectory, path.replace(baseDirectory.getName(), ""));
     if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))
@@ -120,7 +121,7 @@ public class FileService {
 
     if (!file.exists()) {
       if (!createParentFolders)
-        throw new IOException("File: " + file.getName() + " doesn't exists!");
+        throw new FileNotFoundException("File: " + file.getName() + " doesn't exists!");
       if (!file.mkdirs())
         throw new IOException("File: " + file.getName() + " cannot be created!");
     }
