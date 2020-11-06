@@ -172,7 +172,7 @@ public class FileService {
 
   private void canDownload(String path) throws IOException {
     if (!getBaseDirectoryByPath(path).isCanDownload())
-      throw new SecurityException("You can't download to " + path);
+      throw new SecurityException("You can't download from " + path);
   }
 
   private void canUpload(String path) throws IOException {
