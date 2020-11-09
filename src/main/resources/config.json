@@ -1,11 +1,18 @@
 {
-  "directories": [{
-    "path": "D:\\Directory1",
-    "password": "TODO",
-    "hidden": "TODO"
-  }, {
-    "path": "D:\\Directory2"
-  }, {
-    "path": "D:\\Directory3"
-  }]
+  "directories": [
+    {
+      "path": "/mnt/sdb1/MusicX",
+      "password": "PASSWD"
+    },
+    {
+      "path": "/mnt/sdb1/Guest",
+      "canUpload": false,
+      "canDelete": false,
+      "canDownload": true
+    },
+    {
+      "path": "/mnt/sdb1/rtu",
+      "password": "PASSWD"
+    }
+  ]
 }
