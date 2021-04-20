@@ -1,13 +1,17 @@
 package service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
-
 import java.io.File;
 import java.io.IOException;
 
+@JsonIgnoreProperties({
+  "path", "parentFile", "absolutePath", "absoluteFile", "canonicalPath", "canonicalFile",
+  "totalSpace", "freeSpace", "usableSpace", "parent", "absolute"
+})
 public class FileEntity extends File {
   private String password = null;
   private boolean canUpload = true;
