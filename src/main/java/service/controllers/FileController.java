@@ -48,7 +48,7 @@ public class FileController {
   }
 
   @PostMapping(value = "/file", consumes = "multipart/form-data")
-  public ResponseEntity<FileEntity> create(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
+  public ResponseEntity<FileEntity> createFile(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
                                            @RequestParam String path,
                                            @RequestParam(defaultValue = "") String password,
                                            @RequestParam(defaultValue = "false") boolean override,
