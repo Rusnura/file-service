@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import service.models.FileEntity;
-import service.services.FileService;
+import service.models.FileEntityOld;
+import service.services.FileServiceOld;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -19,25 +19,25 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-public class FileController {
-  private final FileService fileService;
+public class FileControllerOld {
+  private final FileServiceOld fileServiceOld;
 
-  public FileController(FileService fileService) {
-    this.fileService = fileService;
+  public FileControllerOld(FileServiceOld fileServiceOld) {
+    this.fileServiceOld = fileServiceOld;
   }
 
   @GetMapping("/files")
   public ResponseEntity<?> getFiles(@RequestParam(defaultValue = "/") String path,
                                     @RequestParam(defaultValue = "") String password,
                                     @RequestParam(defaultValue = "false") boolean showHidden) throws Exception {
-    return ResponseEntity.ok(fileService.getFiles(path, password, showHidden));
+    return ResponseEntity.ok(fileServiceOld.getFiles(path, password, showHidden));
   }
 
   @GetMapping("/file")
   public void getFile(HttpServletResponse response,
                       @RequestParam String path,
                       @RequestParam(defaultValue = "") String password) throws IOException {
-    FileEntity file = fileService.getFile(path, password);
+    FileEntityOld file = fileServiceOld.getFile(path, password);
     response.setStatus(HttpServletResponse.SC_OK);
     response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
     response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getFileSize()));
@@ -48,13 +48,13 @@ public class FileController {
   }
 
   @PostMapping(value = "/file", consumes = "multipart/form-data")
-  public ResponseEntity<FileEntity> createFile(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
-                                           @RequestParam String path,
-                                           @RequestParam(defaultValue = "") String password,
-                                           @RequestParam(defaultValue = "false") boolean override,
-                                           @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
+  public ResponseEntity<FileEntityOld> createFile(@RequestPart @Valid @NotNull @NotBlank MultipartFile file,
+                                                  @RequestParam String path,
+                                                  @RequestParam(defaultValue = "") String password,
+                                                  @RequestParam(defaultValue = "false") boolean override,
+                                                  @RequestParam(defaultValue = "false") boolean createParentFolders) throws IOException {
     try {
-      return ResponseEntity.ok(fileService.putFile(path, password, file, override, createParentFolders));
+      return ResponseEntity.ok(fileServiceOld.putFile(path, password, file, override, createParentFolders));
     } catch (FileExistsException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
@@ -63,6 +63,6 @@ public class FileController {
   @DeleteMapping(value = "/file")
   public ResponseEntity<?> deleteFile(@RequestParam String path,
                                       @RequestParam(defaultValue = "") String password) throws IOException {
-    return (fileService.deleteFile(path, password) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
+    return (fileServiceOld.deleteFile(path, password) ? ResponseEntity.ok() : ResponseEntity.badRequest()).build();
   }
 }

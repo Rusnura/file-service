@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import service.models.FileEntity;
+import service.models.FileEntityOld;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @Service
-public class FileService {
+public class FileServiceOld {
   private static final String DIRECTORIES_NODE = "directories";
   private static final String DIRECTORY_PATH_NODE = "path";
   private static final String DIRECTORY_PASSWORD_NODE = "password";
@@ -26,7 +26,7 @@ public class FileService {
   private static final String DIRECTORY_CAN_UPLOAD_NODE = "canUpload";
   private static final String DIRECTORY_CAN_DELETE_NODE = "canDelete";
 
-  private final Map<String, FileEntity> baseDirectories = new HashMap<>();
+  private final Map<String, FileEntityOld> baseDirectories = new HashMap<>();
 
   @Value("${service.config.file}")
   private String configFilePath;
@@ -46,7 +46,7 @@ public class FileService {
     for (JsonNode directory: directories) {
       if (!directory.has(DIRECTORY_PATH_NODE)) continue;
       String path = directory.get(DIRECTORY_PATH_NODE).asText().trim();
-      FileEntity file = new FileEntity(path);
+      FileEntityOld file = new FileEntityOld(path);
       if (!file.exists() || !file.canRead() || file.getName().isEmpty()) {
         System.err.println("File " + path + " isn't exists or not readable!");
         continue;
@@ -76,7 +76,7 @@ public class FileService {
     }
   }
 
-  public FileEntity putFile(String path, String password, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
+  public FileEntityOld putFile(String path, String password, MultipartFile file, boolean override, boolean createParentFolders) throws IOException {
     File directory = checkAvailability(path, password, true, createParentFolders);
     canUpload(path);
     String originalFileName = file.getOriginalFilename();
@@ -87,11 +87,11 @@ public class FileService {
     if (!override && newFile.exists())
       throw new FileExistsException("File: " + originalFileName + " already exists");
     file.transferTo(newFile);
-    return new FileEntity(newFile.getPath());
+    return new FileEntityOld(newFile.getPath());
   }
 
-  public List<FileEntity> getFiles(String path, String password, boolean showHiddenFiles) throws IOException {
-    List<FileEntity> files = new ArrayList<>();
+  public List<FileEntityOld> getFiles(String path, String password, boolean showHiddenFiles) throws IOException {
+    List<FileEntityOld> files = new ArrayList<>();
     if (!path.equals("/")) {
       File directory = checkAvailability(path, password, true);
 
@@ -99,22 +99,22 @@ public class FileService {
       if (directoryFiles != null) {
         for (File file : directoryFiles) {
           if (showHiddenFiles || !file.isHidden()) {
-            files.add(new FileEntity(file.getPath()));
+            files.add(new FileEntityOld(file.getPath()));
           }
         }
       }
     } else {
-      for (Map.Entry<String, FileEntity> baseDirectory : baseDirectories.entrySet()) {
+      for (Map.Entry<String, FileEntityOld> baseDirectory : baseDirectories.entrySet()) {
         files.add(baseDirectory.getValue());
       }
     }
     return files;
   }
 
-  public FileEntity getFile(String path, String password) throws IOException {
+  public FileEntityOld getFile(String path, String password) throws IOException {
     File file = checkAvailability(path, password, false);
     canDownload(path);
-    return new FileEntity(file.getPath());
+    return new FileEntityOld(file.getPath());
   }
 
   public boolean deleteFile(String path, String password) throws IOException {
@@ -123,9 +123,9 @@ public class FileService {
     return file.delete();
   }
 
-  private FileEntity getBaseDirectoryByPath(String path) throws FileNotFoundException {
-    FileEntity baseDirectory = null;
-    for (Map.Entry<String, FileEntity> directory : baseDirectories.entrySet()) {
+  private FileEntityOld getBaseDirectoryByPath(String path) throws FileNotFoundException {
+    FileEntityOld baseDirectory = null;
+    for (Map.Entry<String, FileEntityOld> directory : baseDirectories.entrySet()) {
       if (path.contains(directory.getKey()))
         baseDirectory = directory.getValue();
     }
@@ -135,7 +135,7 @@ public class FileService {
     return baseDirectory;
   }
 
-  private void checkPasswordToBaseDirectory(FileEntity baseDirectory, String password) {
+  private void checkPasswordToBaseDirectory(FileEntityOld baseDirectory, String password) {
     if (!StringUtils.isEmpty(baseDirectory.getPassword()) && !password.equals(baseDirectory.getPassword()))
       throw new SecurityException("Wrong password for directory " + baseDirectory.getName() + "!");
   }
@@ -145,7 +145,7 @@ public class FileService {
   }
 
   private File checkAvailability(String path, String password, @Nullable Boolean itsDirectory, boolean createParentFolders) throws IOException {
-    FileEntity baseDirectory = getBaseDirectoryByPath(path);
+    FileEntityOld baseDirectory = getBaseDirectoryByPath(path);
     checkPasswordToBaseDirectory(baseDirectory, password);
     File file = new File(baseDirectory, path.replace(baseDirectory.getName(), ""));
     if (!file.getCanonicalPath().contains(baseDirectory.getCanonicalPath()))

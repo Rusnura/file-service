@@ -12,7 +12,7 @@ import java.io.IOException;
   "path", "parentFile", "absolutePath", "absoluteFile", "canonicalPath", "canonicalFile",
   "totalSpace", "freeSpace", "usableSpace", "parent", "absolute"
 })
-public class FileEntity extends File {
+public class FileEntityOld extends File {
   private String password = null;
   private boolean canUpload = true;
   private boolean canDelete = true;
@@ -22,7 +22,7 @@ public class FileEntity extends File {
 //    super(pathname);
 //  }
 
-  public FileEntity(String pathname) {
+  public FileEntityOld(String pathname) {
     super(pathname);
   }
 
