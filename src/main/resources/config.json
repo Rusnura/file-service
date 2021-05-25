@@ -1,18 +1,10 @@
 {
   "directories": [
     {
-      "path": "/mnt/sdb1/MusicX",
-      "password": "PASSWD"
-    },
-    {
-      "path": "/mnt/sdb1/Guest",
+      "path": "D:\\PortableApps",
       "canUpload": false,
       "canDelete": false,
       "canDownload": true
-    },
-    {
-      "path": "/mnt/sdb1/rtu",
-      "password": "PASSWD"
     }
   ]
 }
