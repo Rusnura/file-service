@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FSDirectory extends FSObject {
-  private final List<FSDirectory> children = new ArrayList<>();
+  private final List<FSObject> children = new ArrayList<>();
 
-  public List<FSDirectory> getChildren() {
+  public FSDirectory(String name) {
+    super(name);
+  }
+
+  public List<FSObject> getChildren() {
     return children;
   }
 }
