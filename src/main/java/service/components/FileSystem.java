@@ -4,25 +4,27 @@ import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class FileSystem {
-  private static final FSDirectory root = new FSDirectory();
+  public static final FSDirectory root = new FSDirectory("");
 
-  public FSObject getByPath(String path) {
-    String[] segments = path.split("//");
-    return null;
-  }
+  public Optional<? extends FSObject> getFileByPath(String path, FSDirectory directory) {
+    String[] files = path.split("/");
+    String currentFile = files[0];
 
-  public FSObject getObjectByNameFromFSDirectory(String name, FSDirectory directory) {
-    for (FSObject fsObject : directory.getChildren()) {
-      if (fsObject.getName().equals(name))
-        return fsObject;
+    for (FSObject object : directory.getChildren()) {
+      if (!currentFile.equals(object.getName()))
+        continue;
+
+      if (object instanceof FSDirectory && files.length > 1)
+        return getFileByPath(files[1], (FSDirectory) object);
+
+      return Optional.of(object);
     }
-
-    return null;
-  }
-
-  public FSDirectory getRoot() {
-    return root;
+    return Optional.empty();
   }
 }
