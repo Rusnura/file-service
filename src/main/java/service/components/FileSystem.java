@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +13,8 @@ import java.util.Optional;
 public class FileSystem {
   public static final FSDirectory root = new FSDirectory("");
 
-  public Optional<? extends FSObject> getFileByPath(String path, FSDirectory directory) {
-    String[] files = path.split("/");
+  public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory directory) {
+    String[] files = path.split("/", 2);
     String currentFile = files[0];
 
     for (FSObject object : directory.getChildren()) {
@@ -21,7 +22,7 @@ public class FileSystem {
         continue;
 
       if (object instanceof FSDirectory && files.length > 1)
-        return getFileByPath(files[1], (FSDirectory) object);
+        return getFSObjectByPath(files[1], (FSDirectory) object);
 
       return Optional.of(object);
     }

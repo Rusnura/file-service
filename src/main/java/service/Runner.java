@@ -30,6 +30,8 @@ public class Runner extends SpringBootServletInitializer implements CommandLineR
     test1.getChildren().add(subtest1);
     FileSystem.root.getChildren().add(test1);
 
-    Optional<? extends FSObject> object = fileSystem.getFileByPath("test1/subtest1/subSubtest1/test", FileSystem.root);
+    Optional<? extends FSObject> object = fileSystem.getFSObjectByPath("test1/subtest1/subSubtest1", FileSystem.root);
+    FSObject obj = object.get();
+    System.out.println(obj);
   }
 }
