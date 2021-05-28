@@ -28,4 +28,16 @@ public class FileSystem {
     }
     return Optional.empty();
   }
+
+  public boolean addFSObjectToPath(FSObject object, String to) {
+    Optional<? extends FSObject> directoryOpt = getFSObjectByPath(to, FileSystem.root);
+    if (!directoryOpt.isPresent())
+      return false;
+
+    FSObject directory = directoryOpt.get();
+    if (!(directory instanceof FSDirectory))
+      return false;
+
+    return ((FSDirectory) directory).getChildren().add(object);
+  }
 }
