@@ -2,6 +2,7 @@ package service.components;
 
 import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
+import service.entities.FSFile;
 import service.entities.FSObject;
 
 import java.util.Arrays;
@@ -38,6 +39,22 @@ public class FileSystem {
     if (!(directory instanceof FSDirectory))
       return false;
 
-    return ((FSDirectory) directory).getChildren().add(object);
+    ((FSDirectory) directory).getChildren().add(object);
+    object.setParent((FSDirectory) directory);
+    return true;
+  }
+
+  public boolean removeFSObjectByPath(String path) {
+    Optional<? extends FSObject> FSObjectOpt = getFSObjectByPath(path, FileSystem.root);
+    if (!FSObjectOpt.isPresent())
+      return false;
+
+    FSObject fsObject = FSObjectOpt.get();
+    if (fsObject instanceof FSFile) {
+      FSDirectory parent = fsObject.getParent();
+      return parent.getChildren().remove(fsObject);
+    }
+
+    return false;
   }
 }
