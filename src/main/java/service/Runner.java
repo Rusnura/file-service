@@ -22,9 +22,9 @@ public class Runner extends SpringBootServletInitializer implements CommandLineR
 
   @Override
   public void run(String... args) throws Exception {
-    FSDirectory test1 = new FSDirectory("test1");
-    FSDirectory subtest1 = new FSDirectory("subtest1");
-    FSDirectory subSubtest1 = new FSDirectory("subSubtest1");
+    FSDirectory test1 = new FSDirectory("test1", FileSystem.root);
+    FSDirectory subtest1 = new FSDirectory("subtest1", test1);
+    FSDirectory subSubtest1 = new FSDirectory("subSubtest1", subtest1);
 
     subtest1.getChildren().add(subSubtest1);
     test1.getChildren().add(subtest1);

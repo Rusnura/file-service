@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Component
 public class FileSystem {
-  public static final FSDirectory root = new FSDirectory("");
+  public static final FSDirectory root = new FSDirectory("", null);
 
   public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory directory) {
     String[] files = path.split("/", 2);

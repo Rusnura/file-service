@@ -6,8 +6,8 @@ import java.util.List;
 public class FSDirectory extends FSObject {
   private final List<FSObject> children = new ArrayList<>();
 
-  public FSDirectory(String name) {
-    super(name);
+  public FSDirectory(String name, FSDirectory parent) {
+    super(name, parent);
   }
 
   public List<FSObject> getChildren() {
