@@ -32,7 +32,7 @@ public class FileSystem {
 
   public boolean addFSObjectToPath(FSObject object, String to) {
     Optional<? extends FSObject> directoryOpt = getFSObjectByPath(to, FileSystem.root);
-    if (!directoryOpt.isPresent())
+    if (directoryOpt.isEmpty())
       return false;
 
     FSObject directory = directoryOpt.get();
@@ -46,7 +46,7 @@ public class FileSystem {
 
   public boolean removeFSObjectByPath(String path) {
     Optional<? extends FSObject> FSObjectOpt = getFSObjectByPath(path, FileSystem.root);
-    if (!FSObjectOpt.isPresent())
+    if (FSObjectOpt.isEmpty())
       return false;
 
     FSObject fsObject = FSObjectOpt.get();
