@@ -4,9 +4,8 @@ public abstract class FSObject {
   private String name;
   private FSDirectory parent;
 
-  public FSObject(String name, FSDirectory parent) {
+  public FSObject(String name) {
     this.name = name;
-    this.parent = parent;
   }
 
   public String getName() {

@@ -6,10 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import service.components.FileSystem;
-import service.entities.FSDirectory;
-import service.entities.FSObject;
-
-import java.util.Optional;
 
 @SpringBootApplication
 public class Runner extends SpringBootServletInitializer implements CommandLineRunner {
@@ -22,16 +18,6 @@ public class Runner extends SpringBootServletInitializer implements CommandLineR
 
   @Override
   public void run(String... args) {
-    FSDirectory test1 = new FSDirectory("test1", FileSystem.root);
-    FSDirectory subtest1 = new FSDirectory("subtest1", test1);
-    FSDirectory subSubtest1 = new FSDirectory("subSubtest1", subtest1);
 
-    subtest1.getChildren().add(subSubtest1);
-    test1.getChildren().add(subtest1);
-    FileSystem.root.getChildren().add(test1);
-
-    Optional<? extends FSObject> object = fileSystem.getFSObjectByPath("test1/subtest1/subSubtest1", FileSystem.root);
-    FSObject obj = object.get();
-    System.out.println(obj);
   }
 }

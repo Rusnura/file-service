@@ -8,13 +8,23 @@ import java.util.Optional;
 
 @Component
 public class FileSystem {
-  public static final FSDirectory root = new FSDirectory("", null);
+  public static final FSDirectory root = new FSDirectory("");
 
-  public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory directory) {
+  public Optional<? extends FSObject> getFSObjectByPath(String path) {
+    return getFSObjectByPath(path, FileSystem.root);
+  }
+
+  public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory from) {
     String[] files = path.split("/", 2);
     String currentFile = files[0];
 
-    for (FSObject object : directory.getChildren()) {
+    if (root.getName().equals(currentFile)) {
+      if (files.length == 1)
+        return Optional.of(FileSystem.root);
+      return getFSObjectByPath(files[1], FileSystem.root);
+    }
+
+    for (FSObject object : from.getChildren()) {
       if (!currentFile.equals(object.getName()))
         continue;
 
@@ -50,7 +60,7 @@ public class FileSystem {
       FSDirectory parent = fsObject.getParent();
       return parent.getChildren().remove(fsObject);
     }
-
+    // TODO: Implement deletion of FSDirectory here...
     return false;
   }
 }

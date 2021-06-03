@@ -3,8 +3,8 @@ package service.entities;
 public class FSFile extends FSObject {
   private long size = 0;
 
-  public FSFile(String name, FSDirectory parent) {
-    super(name, parent);
+  public FSFile(String name) {
+    super(name);
   }
 
   public long getSize() {
