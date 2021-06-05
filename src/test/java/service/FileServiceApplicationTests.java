@@ -7,6 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FileServiceApplicationTests {
 	@Test
 	void applicationLoaded() {
-    System.out.println("Hello, FileService is created!");
+    System.out.println("Hello, FileService is ready for tests!");
 	}
 }
