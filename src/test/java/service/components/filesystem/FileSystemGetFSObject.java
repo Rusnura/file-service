@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 import service.components.FileSystem;
 import service.entities.FSDirectory;
 import service.entities.FSFile;
@@ -58,11 +59,16 @@ public class FileSystemGetFSObject {
     final Optional<? extends FSObject> directoryOpt = fileSystem.getFSObjectByPath(path);
     Assertions.assertTrue(directoryOpt.isPresent());
     Assertions.assertTrue(directoryOpt.get() instanceof FSDirectory);
+    String[] segments = path.split("/");
+    String name = segments.length > 0 ? segments[segments.length - 1] : "";
+    Assertions.assertEquals(name, directoryOpt.get().getName());
   }
 
   private void getFSFile(String path) {
-    final Optional<? extends FSObject> directoryOpt = fileSystem.getFSObjectByPath(path);
-    Assertions.assertTrue(directoryOpt.isPresent());
-    Assertions.assertTrue(directoryOpt.get() instanceof FSFile);
+    final Optional<? extends FSObject> fileOpt = fileSystem.getFSObjectByPath(path);
+    Assertions.assertTrue(fileOpt.isPresent());
+    Assertions.assertTrue(fileOpt.get() instanceof FSFile);
+    String name = path.split("/")[path.split("/").length - 1];
+    Assertions.assertEquals(name, fileOpt.get().getName());
   }
 }
