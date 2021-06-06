@@ -1,17 +1,13 @@
 package service.components.filesystem;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 import service.components.FileSystem;
 import service.entities.FSDirectory;
 import service.entities.FSFile;
-import service.entities.FSObject;
-
-import java.util.Optional;
+import service.helpers.FSObjectHelper;
 
 @SpringBootTest
 public class FileSystemGetFSObject {
@@ -27,48 +23,31 @@ public class FileSystemGetFSObject {
 
     fileSystem.addFSObjectToPath(new FSDirectory("subdirectory1"), "/directory1");
     fileSystem.addFSObjectToPath(new FSDirectory("subdirectory2"), "/directory2");
-    fileSystem.addFSObjectToPath(new FSFile("subfile1"), "/directory1");
-    fileSystem.addFSObjectToPath(new FSFile("subfile2"), "/directory2");
+    fileSystem.addFSObjectToPath(new FSFile("subFile1"), "/directory1");
+    fileSystem.addFSObjectToPath(new FSFile("subFile2"), "/directory2");
 
     fileSystem.addFSObjectToPath(new FSDirectory("subSubdirectory1"), "/directory1/subdirectory1");
     fileSystem.addFSObjectToPath(new FSDirectory("subSubdirectory2"), "/directory2/subdirectory2");
-    fileSystem.addFSObjectToPath(new FSFile("subSubfile1"), "/directory1/subdirectory1");
-    fileSystem.addFSObjectToPath(new FSFile("subSubfile2"), "/directory2/subdirectory2");
+    fileSystem.addFSObjectToPath(new FSFile("subSubFile1"), "/directory1/subdirectory1");
+    fileSystem.addFSObjectToPath(new FSFile("subSubFile2"), "/directory2/subdirectory2");
   }
 
   @Test
   public void getFSDirectories() { // Get a directories
-    getFSDirectory("/");
-    getFSDirectory("/directory1");
-    getFSDirectory("/directory2");
-    getFSDirectory("/directory1/subdirectory1");
-    getFSDirectory("/directory2/subdirectory2");
+    FSObjectHelper.assertFSObject(fileSystem, "/", FSDirectory.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory1", FSDirectory.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory2", FSDirectory.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory1/subdirectory1", FSDirectory.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory2/subdirectory2", FSDirectory.class, true);
   }
 
   @Test
   public void getFSFiles() { // Get a files
-    getFSFile("/file1");
-    getFSFile("/file2");
-    getFSFile("/directory1/subfile1");
-    getFSFile("/directory2/subfile2");
-    getFSFile("/directory1/subdirectory1/subSubfile1");
-    getFSFile("/directory2/subdirectory2/subSubfile2");
-  }
-
-  private void getFSDirectory(String path) {
-    final Optional<? extends FSObject> directoryOpt = fileSystem.getFSObjectByPath(path);
-    Assertions.assertTrue(directoryOpt.isPresent());
-    Assertions.assertTrue(directoryOpt.get() instanceof FSDirectory);
-    String[] segments = path.split("/");
-    String name = segments.length > 0 ? segments[segments.length - 1] : "";
-    Assertions.assertEquals(name, directoryOpt.get().getName());
-  }
-
-  private void getFSFile(String path) {
-    final Optional<? extends FSObject> fileOpt = fileSystem.getFSObjectByPath(path);
-    Assertions.assertTrue(fileOpt.isPresent());
-    Assertions.assertTrue(fileOpt.get() instanceof FSFile);
-    String name = path.split("/")[path.split("/").length - 1];
-    Assertions.assertEquals(name, fileOpt.get().getName());
+    FSObjectHelper.assertFSObject(fileSystem, "/file1", FSFile.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/file2", FSFile.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory1/subFile1", FSFile.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory2/subFile2", FSFile.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory1/subdirectory1/subSubFile1", FSFile.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "/directory2/subdirectory2/subSubFile2", FSFile.class, true);
   }
 }
