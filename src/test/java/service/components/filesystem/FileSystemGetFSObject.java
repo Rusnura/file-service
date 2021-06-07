@@ -1,5 +1,6 @@
 package service.components.filesystem;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import service.components.FileSystem;
 import service.entities.FSDirectory;
 import service.entities.FSFile;
+import service.entities.FSObject;
 import service.helpers.FSObjectHelper;
+import java.util.Optional;
 
 @SpringBootTest
 public class FileSystemGetFSObject {
@@ -49,5 +52,15 @@ public class FileSystemGetFSObject {
     FSObjectHelper.assertFSObject(fileSystem, "/directory2/subFile2", FSFile.class, true);
     FSObjectHelper.assertFSObject(fileSystem, "/directory1/subdirectory1/subSubFile1", FSFile.class, true);
     FSObjectHelper.assertFSObject(fileSystem, "/directory2/subdirectory2/subSubFile2", FSFile.class, true);
+  }
+
+  @Test
+  public void getRootDirectory() {
+    FSObjectHelper.assertFSObject(fileSystem, "///////////", FSDirectory.class, true);
+
+    Optional<? extends FSObject> fsRootOpt = fileSystem.getFSObjectByPath("///////////");
+    Assertions.assertTrue(fsRootOpt.isPresent());
+    Assertions.assertTrue(fsRootOpt.get() instanceof FSDirectory);
+    Assertions.assertEquals(fsRootOpt.get(), FileSystem.root);
   }
 }
