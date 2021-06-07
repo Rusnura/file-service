@@ -16,9 +16,9 @@ public class FSObjectHelper {
     }
     Assertions.assertTrue(fsObjectOpt.isPresent());
 
-    if (type instanceof FSDirectory) { // FIXME
+    if (type == FSDirectory.class) {
       Assertions.assertTrue(fsObjectOpt.get() instanceof FSDirectory);
-    } else if (type instanceof FSFile) {
+    } else if (type == FSFile.class) {
       Assertions.assertTrue(fsObjectOpt.get() instanceof FSFile);
     }
 
