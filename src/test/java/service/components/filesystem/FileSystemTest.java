@@ -9,16 +9,16 @@ import service.components.FileSystem;
 public class FileSystemTest {
   @Test
   public void fileSystemRootIsNotNullTest() { // Test: FileSystem.root is not null
-    Assertions.assertNotNull(FileSystem.root);
+    Assertions.assertNotNull(FileSystem.ROOT);
   }
 
   @Test
   public void fileSystemRootNameIsEmpty() { // Test: FileSystem.root has empty name
-    Assertions.assertEquals("", FileSystem.root.getName());
+    Assertions.assertEquals("", FileSystem.ROOT.getName());
   }
 
   @Test
   public void fileSystemRootParentIsNull() { // Test: FileSystem.root has null parent
-    Assertions.assertNull(FileSystem.root.getParent());
+    Assertions.assertNull(FileSystem.ROOT.getParent());
   }
 }
