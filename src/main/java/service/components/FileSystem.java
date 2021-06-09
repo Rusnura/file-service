@@ -8,20 +8,21 @@ import java.util.Optional;
 
 @Component
 public class FileSystem {
-  public static final FSDirectory root = new FSDirectory("");
+  public static final String SEPARATOR = "/";
+  public static final FSDirectory ROOT = new FSDirectory("");
 
   public Optional<? extends FSObject> getFSObjectByPath(String path) {
-    return getFSObjectByPath(path, FileSystem.root);
+    return getFSObjectByPath(path, FileSystem.ROOT);
   }
 
   public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory from) {
-    String[] files = path.split("/", 2);
+    String[] files = path.split(FileSystem.SEPARATOR, 2);
     String currentFile = files[0];
 
-    if (root.getName().equals(currentFile)) {
+    if (ROOT.getName().equals(currentFile)) {
       if (files.length == 1)
-        return Optional.of(FileSystem.root);
-      return getFSObjectByPath(files[1], FileSystem.root);
+        return Optional.of(FileSystem.ROOT);
+      return getFSObjectByPath(files[1], FileSystem.ROOT);
     }
 
     for (FSObject object : from.getChildren()) {
@@ -37,7 +38,7 @@ public class FileSystem {
   }
 
   public boolean addFSObjectToPath(FSObject object, String to) {
-    Optional<? extends FSObject> directoryOpt = getFSObjectByPath(to, FileSystem.root);
+    Optional<? extends FSObject> directoryOpt = getFSObjectByPath(to, FileSystem.ROOT);
     if (directoryOpt.isEmpty())
       return false;
 
@@ -51,7 +52,7 @@ public class FileSystem {
   }
 
   public boolean removeFSObjectByPath(String path) {
-    Optional<? extends FSObject> FSObjectOpt = getFSObjectByPath(path, FileSystem.root);
+    Optional<? extends FSObject> FSObjectOpt = getFSObjectByPath(path, FileSystem.ROOT);
     if (FSObjectOpt.isEmpty())
       return false;
 
