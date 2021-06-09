@@ -132,3 +132,8 @@ gradle-app.setting
 
 ### Gradle Patch ###
 **/build/
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/libraries-with-intellij-classes.xml
+.idea/misc.xml
+.idea/vcs.xml
