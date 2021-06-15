@@ -1,17 +1,19 @@
 package service.entities;
 
+import java.io.File;
+
 public class FSFile extends FSObject {
-  private long size = 0;
+  private File file = null;
 
   public FSFile(String name) {
     super(name);
   }
 
-  public long getSize() {
-    return size;
+  public File getFile() {
+    return file;
   }
 
-  public void setSize(long size) {
-    this.size = size;
+  public void setFile(File file) {
+    this.file = file;
   }
 }
