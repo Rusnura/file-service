@@ -1,19 +1,19 @@
 package service.entities;
 
-import java.io.File;
+import org.springframework.core.io.InputStreamResource;
 
 public class FSFile extends FSObject {
-  private File file = null;
+  private InputStreamResource resource = null;
 
   public FSFile(String name) {
     super(name);
   }
 
-  public File getFile() {
-    return file;
+  public InputStreamResource getResource() {
+    return resource;
   }
 
-  public void setFile(File file) {
-    this.file = file;
+  public void setResource(InputStreamResource resource) {
+    this.resource = resource;
   }
 }
