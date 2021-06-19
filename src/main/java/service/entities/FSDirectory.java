@@ -1,5 +1,6 @@
 package service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class FSDirectory extends FSObject {
     super(name);
   }
 
+  @JsonIgnore
   public List<FSObject> getChildren() {
     return children;
   }

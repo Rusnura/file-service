@@ -1,5 +1,6 @@
 package service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.core.io.InputStreamResource;
 
 public class FSFile extends FSObject {
@@ -9,6 +10,7 @@ public class FSFile extends FSObject {
     super(name);
   }
 
+  @JsonIgnore
   public InputStreamResource getResource() {
     return resource;
   }
