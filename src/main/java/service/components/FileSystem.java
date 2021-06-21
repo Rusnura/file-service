@@ -2,10 +2,7 @@ package service.components;
 
 import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
-import service.entities.FSFile;
 import service.entities.FSObject;
-
-import java.util.Iterator;
 import java.util.Optional;
 
 @Component
@@ -59,12 +56,6 @@ public class FileSystem {
       return false;
 
     FSObject fsObject = FSObjectOpt.get();
-    if (fsObject instanceof FSDirectory) {
-      Iterator<FSObject> iterator = ((FSDirectory) fsObject).getChildren().iterator();
-      while (iterator.hasNext()) {
-        removeFSObjectByPath(path + FileSystem.SEPARATOR + iterator.next().getName());
-      }
-    }
     FSDirectory parent = fsObject.getParent();
     return parent.getChildren().remove(fsObject);
   }

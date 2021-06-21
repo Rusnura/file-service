@@ -9,6 +9,7 @@ import service.entities.FSDirectory;
 import service.entities.FSObject;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class FileSystemRestController implements IFileSystemRestController {
@@ -16,7 +17,7 @@ public class FileSystemRestController implements IFileSystemRestController {
   private FileSystem fileSystem;
 
   @Override
-  public ResponseEntity<List<FSObject>> findFilesByPath(String path) {
+  public ResponseEntity<Set<FSObject>> findFilesByPath(String path) {
     Optional<? extends FSObject> fsObjectOpt = fileSystem.getFSObjectByPath(path);
     if (fsObjectOpt.isEmpty())
       return ResponseEntity.notFound().build();

@@ -1,18 +1,17 @@
 package service.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FSDirectory extends FSObject {
-  private final List<FSObject> children = new ArrayList<>();
+  private final Set<FSObject> children = new LinkedHashSet<>();
 
   public FSDirectory(String name) {
     super(name);
   }
 
   @JsonIgnore
-  public List<FSObject> getChildren() {
+  public Set<FSObject> getChildren() {
     return children;
   }
 }
