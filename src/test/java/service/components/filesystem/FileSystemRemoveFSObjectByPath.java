@@ -1,5 +1,6 @@
 package service.components.filesystem;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,5 +80,10 @@ public class FileSystemRemoveFSObjectByPath {
     Assertions.assertTrue(fileSystem.removeFSObjectByPath("/directory1"));
     Optional<? extends FSObject> folderInRootAfterDeletionOpt = fileSystem.getFSObjectByPath("/directory1");
     Assertions.assertTrue(folderInRootAfterDeletionOpt.isEmpty());
+  }
+
+  @AfterEach
+  public void destruct() {
+    FileSystem.ROOT.getChildren().clear();
   }
 }

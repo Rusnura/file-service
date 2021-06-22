@@ -1,5 +1,6 @@
 package service.components.filesystem;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,5 +63,10 @@ public class FileSystemGetFSObject {
     Assertions.assertTrue(fsRootOpt.isPresent());
     Assertions.assertTrue(fsRootOpt.get() instanceof FSDirectory);
     Assertions.assertEquals(fsRootOpt.get(), FileSystem.ROOT);
+  }
+
+  @AfterEach
+  public void destruct() {
+    FileSystem.ROOT.getChildren().clear();
   }
 }
