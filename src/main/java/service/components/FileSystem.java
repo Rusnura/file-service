@@ -1,5 +1,7 @@
 package service.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
@@ -7,6 +9,8 @@ import java.util.Optional;
 
 @Component
 public class FileSystem {
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileSystem.class);
+
   public static final String SEPARATOR = "/";
   public static final FSDirectory ROOT = new FSDirectory("");
 
@@ -41,12 +45,18 @@ public class FileSystem {
     if (directoryOpt.isEmpty())
       return false;
 
-    FSObject directory = directoryOpt.get();
-    if (!(directory instanceof FSDirectory))
+    FSObject fsObject = directoryOpt.get();
+    if (!(fsObject instanceof FSDirectory))
       return false;
 
-    ((FSDirectory) directory).getChildren().add(object);
-    object.setParent((FSDirectory) directory);
+    FSDirectory fsDirectory = (FSDirectory) fsObject;
+    if (fsDirectory.getChildren().stream().anyMatch(f -> object.getName().equals(f.getName()))) {
+      LOGGER.warn("File '{}' already contains in '{}'", object.getName(), to);
+      return false;
+    }
+
+    fsDirectory.getChildren().add(object);
+    object.setParent(fsDirectory);
     return true;
   }
 
