@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FSObjectNameValidator implements IValidator {
-  private static final Pattern correctNamePattern = Pattern.compile("[a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+  private static final Pattern incorrectNamePattern = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
 
   @Override
   public <T> boolean validate(T object) {
@@ -16,8 +16,8 @@ public class FSObjectNameValidator implements IValidator {
       if (ObjectUtils.isEmpty(fsObject.getName()))
         return false;
 
-      Matcher matcher = correctNamePattern.matcher(fsObject.getName());
-      return matcher.matches();
+      Matcher matcher = incorrectNamePattern.matcher(fsObject.getName());
+      return matcher.find();
     }
     return false;
   }

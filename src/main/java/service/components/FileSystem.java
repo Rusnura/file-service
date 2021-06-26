@@ -5,11 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
+import service.validators.FSObjectNameValidator;
+import service.validators.interfaces.IValidator;
+import java.text.MessageFormat;
 import java.util.Optional;
 
 @Component
 public class FileSystem {
   private static final Logger LOGGER = LoggerFactory.getLogger(FileSystem.class);
+  private static final IValidator[] NAME_VALIDATORS = new IValidator[] { new FSObjectNameValidator() };
 
   public static final String SEPARATOR = "/";
   public static final FSDirectory ROOT = new FSDirectory("");
@@ -41,6 +45,11 @@ public class FileSystem {
   }
 
   public boolean addFSObjectToPath(FSObject object, String to) {
+    for (IValidator nameValidator : NAME_VALIDATORS) {
+      if (!nameValidator.validate(object))
+        throw new IllegalArgumentException("Name '" + object.getName() + "' isn't allowed!");
+    }
+
     Optional<? extends FSObject> directoryOpt = getFSObjectByPath(to, FileSystem.ROOT);
     if (directoryOpt.isEmpty())
       return false;
