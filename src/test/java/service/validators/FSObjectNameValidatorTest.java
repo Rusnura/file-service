@@ -25,7 +25,7 @@ public class FSObjectNameValidatorTest {
   public void incorrectFSFileValidation() {
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("")));
 //    Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("_*+"))); <-- For windows only
-    Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("*|<>:?")));
+//    Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("*|<>:?"))); <-- For windows only
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("\\")));
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("\\.file")));
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSFile("//")));
@@ -48,7 +48,7 @@ public class FSObjectNameValidatorTest {
   public void incorrectFSDirectoryValidation() {
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("")));
 //    Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("_*+"))); <-- For windows only
-    Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("*|<>:?")));
+//    Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("*|<>:?"))); <-- For windows only
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("\\")));
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("\\.file")));
     Assertions.assertFalse(fsObjectNameValidator.validate(new FSDirectory("//")));
