@@ -18,6 +18,8 @@ public class FSObjectNameValidator implements IValidator {
       FSObject fsObject = (FSObject) object;
       if (ObjectUtils.isEmpty(fsObject.getName()))
         return false;
+      if (fsObject.getName().contains("\\") || fsObject.getName().contains("/"))
+        return false;
 
       try {
         new File(fsObject.getName()).getCanonicalPath();
