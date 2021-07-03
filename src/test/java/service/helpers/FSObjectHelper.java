@@ -25,5 +25,6 @@ public class FSObjectHelper {
     String[] segments = path.split("/");
     String name = segments.length > 0 ? segments[segments.length - 1] : "";
     Assertions.assertEquals(name, fsObjectOpt.get().getName());
+    Assertions.assertEquals(path, fsObjectOpt.get().getPath());
   }
 }
