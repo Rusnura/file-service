@@ -2,6 +2,7 @@ package service.validators;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import service.components.FileSystem;
 import service.entities.FSObject;
 import service.validators.interfaces.IValidator;
 
@@ -18,7 +19,9 @@ public class FSObjectNameValidator implements IValidator {
       FSObject fsObject = (FSObject) object;
       if (ObjectUtils.isEmpty(fsObject.getName()))
         return false;
-      if (fsObject.getName().contains("\\") || fsObject.getName().contains("/"))
+      if (fsObject.getName().contains("\\") ||
+          fsObject.getName().contains("/") ||
+          fsObject.getName().contains(FileSystem.SEPARATOR))
         return false;
 
       try {
