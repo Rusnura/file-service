@@ -27,6 +27,7 @@ public class FileSystemAddFSObjectToPath {
 
     FSObject fileFromFileSystem = fileFromFileSystemOpt.get();
     Assertions.assertTrue(fileFromFileSystem instanceof FSFile);
+    Assertions.assertEquals("/file_in_root", fileFromFileSystem.getPath());
   }
 
   @Test
@@ -37,6 +38,7 @@ public class FileSystemAddFSObjectToPath {
 
     Optional<? extends FSObject> uniqueFileOpt = fileSystem.getFSObjectByPath("/" + filename);
     Assertions.assertTrue(uniqueFileOpt.isPresent());
+    Assertions.assertEquals("/" + filename, uniqueFileOpt.get().getPath());
 
     FSFile nonUniqueFile = new FSFile(filename);
     Assertions.assertFalse(fileSystem.addFSObjectToPath(nonUniqueFile, "/"));
@@ -54,6 +56,7 @@ public class FileSystemAddFSObjectToPath {
 
     Optional<? extends FSObject> uniqueFileOpt = fileSystem.getFSObjectByPath("/" + filename);
     Assertions.assertTrue(uniqueFileOpt.isPresent());
+    Assertions.assertEquals("/" + filename, uniqueFileOpt.get().getPath());
 
     FSDirectory nonUniqueDirectory = new FSDirectory(filename);
     Assertions.assertFalse(fileSystem.addFSObjectToPath(nonUniqueDirectory, "/"));

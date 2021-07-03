@@ -8,6 +8,8 @@ public class FSDirectory extends FSObject {
 
   public FSDirectory(String name) {
     super(name);
+    if (name.equals("")) // ROOT
+      super.setPath("");
   }
 
   @JsonIgnore

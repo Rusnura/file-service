@@ -32,7 +32,7 @@ public abstract class FSObject {
     setPath(parent.getPath() + FileSystem.SEPARATOR + name);
   }
 
-  private void setPath(String path) {
+  protected void setPath(String path) {
     this.path = path;
   }
 }
