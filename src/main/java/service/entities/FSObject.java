@@ -16,7 +16,9 @@ public abstract class FSObject {
     return name;
   }
 
-  public String getPath() { return path; }
+  public String getPath() {
+    return path;
+  }
 
   public void setName(String name) {
     this.name = name;
@@ -29,7 +31,7 @@ public abstract class FSObject {
 
   public void setParent(FSDirectory parent) {
     this.parent = parent;
-    setPath(parent.getPath() + FileSystem.SEPARATOR + name);
+    setPath((parent == FileSystem.ROOT) ? FileSystem.SEPARATOR + name : parent.getPath() + FileSystem.SEPARATOR + name);
   }
 
   protected void setPath(String path) {
