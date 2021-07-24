@@ -57,12 +57,10 @@ public class FileSystemGetFSObject {
 
   @Test
   public void getRootDirectory() {
-    FSObjectHelper.assertFSObject(fileSystem, "///////////", FSDirectory.class, true);
+    FSObjectHelper.assertFSObject(fileSystem, "///////////", FSDirectory.class, false);
 
     Optional<? extends FSObject> fsRootOpt = fileSystem.getFSObjectByPath("///////////");
-    Assertions.assertTrue(fsRootOpt.isPresent());
-    Assertions.assertTrue(fsRootOpt.get() instanceof FSDirectory);
-    Assertions.assertEquals(fsRootOpt.get(), FileSystem.ROOT);
+    Assertions.assertTrue(fsRootOpt.isEmpty());
   }
 
   @AfterEach

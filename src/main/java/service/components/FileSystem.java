@@ -23,6 +23,9 @@ public class FileSystem {
 
   public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory from) {
     String[] files = path.split(FileSystem.SEPARATOR, 2);
+    if (path.startsWith("//")) {
+      return Optional.empty();
+    }
     String currentFile = files[0];
 
     if (FileSystem.ROOT.getName().equals(currentFile)) {
