@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.components.FileSystem;
 import service.entities.FSDirectory;
+import service.entities.FSFile;
 import service.services.interfaces.IScanService;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class FileSystemScanService implements IScanService {
         else
           scan(file, fsDirectoryPathToAdding + FileSystem.SEPARATOR + file.getName());
       } else {
-        boolean fsFileCreation = fileSystem.addFSObjectToPath(new FSDirectory(file.getName()), fsDirectoryPathToAdding);
+        boolean fsFileCreation = fileSystem.addFSObjectToPath(new FSFile(file.getName()), fsDirectoryPathToAdding);
         if (!fsFileCreation) {
           LOGGER.warn("Can't create file with name '{}' in FSDirectory '{}'. Skip...", file.getName(), fsDirectoryPathToAdding);
         }
