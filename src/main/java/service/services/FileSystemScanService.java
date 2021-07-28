@@ -35,7 +35,10 @@ public class FileSystemScanService implements IScanService {
           LOGGER.warn("Can't create directory with name '{}' in FSDirectory '{}'. Skip...", file.getName(), fsDirectoryPathToAdding);
           continue;
         }
-        scan(file, directoryToScan + FileSystem.SEPARATOR + file.getName());
+        if (fsDirectoryPathToAdding.equals(FileSystem.SEPARATOR))
+          scan(file, fsDirectoryPathToAdding + file.getName());
+        else
+          scan(file, fsDirectoryPathToAdding + FileSystem.SEPARATOR + file.getName());
       } else {
         boolean fsFileCreation = fileSystem.addFSObjectToPath(new FSDirectory(file.getName()), fsDirectoryPathToAdding);
         if (!fsFileCreation) {
