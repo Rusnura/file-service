@@ -21,6 +21,7 @@ public class FileSystemScanService implements IScanService {
 
   @Override
   public void scan(File directoryToScan, String fsDirectoryPathToAdding) throws IOException {
+    LOGGER.info("Starting scanning directory: '{}' and put all files in '{}'", directoryToScan.getAbsolutePath(), fsDirectoryPathToAdding);
     if (!directoryToScan.exists() || !directoryToScan.isDirectory() || !directoryToScan.canRead())
       throw new IOException("Cannot start scan directory: " + directoryToScan.getAbsolutePath());
 
@@ -47,5 +48,6 @@ public class FileSystemScanService implements IScanService {
         }
       }
     }
+    LOGGER.info("Scanning of directory: '{}' and put all files in '{}' completed!", directoryToScan.getAbsolutePath(), fsDirectoryPathToAdding);
   }
 }
