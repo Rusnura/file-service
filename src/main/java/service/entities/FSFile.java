@@ -3,19 +3,26 @@ package service.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.core.io.InputStreamResource;
 
+import java.nio.file.Path;
+
 public class FSFile extends FSObject {
-  private InputStreamResource resource = null;
+  private Path resource = null;
 
   public FSFile(String name) {
     super(name);
   }
 
+  public FSFile(String name, Path resource) {
+    super(name);
+    this.resource = resource;
+  }
+
   @JsonIgnore
-  public InputStreamResource getResource() {
+  public Path getResource() {
     return resource;
   }
 
-  public void setResource(InputStreamResource resource) {
+  public void setResource(Path resource) {
     this.resource = resource;
   }
 }
