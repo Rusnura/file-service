@@ -12,6 +12,10 @@ public class FSDirectory extends FSObject {
       super.setPath("/");
   }
 
+  public String getType() {
+    return "directory";
+  }
+
   @JsonIgnore
   public Set<FSObject> getChildren() {
     return children;

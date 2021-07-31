@@ -22,6 +22,10 @@ public class FSFile extends FSObject {
     return resource;
   }
 
+  public String getType() {
+    return "file";
+  }
+
   public void setResource(Path resource) {
     this.resource = resource;
   }

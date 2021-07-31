@@ -37,4 +37,6 @@ public abstract class FSObject {
   protected void setPath(String path) {
     this.path = path;
   }
+
+  public abstract String getType();
 }
