@@ -3,11 +3,13 @@ package service.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import service.components.FileSystem;
 import service.entities.FSDirectory;
 import service.entities.FSFile;
 import service.services.interfaces.IScanService;
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -16,8 +18,29 @@ import java.util.Objects;
 public class FileSystemScanService implements IScanService {
   private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemScanService.class);
 
+  @Value("${service.scanner.enable:false}")
+  private boolean isScanEnabled;
+
+  @Value("${service.scanner.path:}")
+  private String path;
+
+  @Value("${service.scanner.scanTo:/}")
+  private String scanTo;
+
   @Autowired
   private FileSystem fileSystem;
+
+  @PostConstruct
+  public void init() {
+    if (!isScanEnabled)
+      return;
+    File startDirectory = new File(path);
+    try {
+      scan(startDirectory, scanTo);
+    } catch (IOException e) {
+      LOGGER.error("Scan is failure! Check your options!", e);
+    }
+  }
 
   @Override
   public void scan(File directoryToScan, String fsDirectoryPathToAdding) throws IOException {

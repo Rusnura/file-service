@@ -6,3 +6,7 @@ server:
 
 service:
   config.file: /config.json
+  scanner:
+    enable: true
+    path: D:\\Downloads
+    scanTo: /
