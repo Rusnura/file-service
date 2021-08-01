@@ -5,7 +5,6 @@ server:
     max-request-size-mb: 150
 
 service:
-  config.file: /config.json
   scanner:
     enable: true
     path: D:\\Downloads
