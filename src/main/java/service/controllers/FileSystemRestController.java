@@ -13,7 +13,6 @@ import service.entities.FSDirectory;
 import service.entities.FSFile;
 import service.entities.FSObject;
 import service.services.interfaces.IFileService;
-
 import java.io.File;
 import java.util.Optional;
 import java.util.Set;
@@ -55,6 +54,14 @@ public class FileSystemRestController implements IFileSystemRestController {
     headers.add("Content-Type", MediaType.APPLICATION_OCTET_STREAM_VALUE);
     headers.add("Content-Disposition", "attachment; filename=\"" + virtualFile.getName() + "\"");
     return new ResponseEntity<>(new FileSystemResource(realFile), headers, HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<?> findFileAndGetInfo(String path) {
+    Optional<? extends FSObject> fsObjectOpt = fileService.findFSObjectByPath(path);
+    if (fsObjectOpt.isEmpty())
+      return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(fsObjectOpt.get());
   }
 
   @Override

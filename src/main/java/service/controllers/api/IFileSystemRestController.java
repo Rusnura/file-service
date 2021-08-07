@@ -12,8 +12,11 @@ public interface IFileSystemRestController {
   @GetMapping("/files")
   ResponseEntity<Set<FSObject>> findFilesByPath(@RequestParam(defaultValue = "/") String path);
 
-  @GetMapping("/file")
+  @GetMapping("/file/download")
   ResponseEntity<FileSystemResource> findFileAndDownload(@RequestParam String path);
+
+  @GetMapping("/file")
+  ResponseEntity<?> findFileAndGetInfo(@RequestParam String path);
 
   @DeleteMapping("/file")
   ResponseEntity<?> delete(@RequestParam String path);
