@@ -23,6 +23,11 @@ public class FileSystemRestController implements IFileSystemRestController {
   private IFileService fileService;
 
   @Override
+  public ResponseEntity<?> addNewFile(String path) {
+    return null;
+  }
+
+  @Override
   public ResponseEntity<Set<FSObject>> findFilesByPath(String path) {
     Optional<? extends FSObject> fsObjectOpt = fileService.findFSObjectByPath(path);
     if (fsObjectOpt.isEmpty())
