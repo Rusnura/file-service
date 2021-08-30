@@ -16,6 +16,7 @@ import service.services.interfaces.IFileService;
 import java.io.File;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 public class FileSystemRestController implements IFileSystemRestController {
@@ -24,7 +25,9 @@ public class FileSystemRestController implements IFileSystemRestController {
 
   @Override
   public ResponseEntity<?> addNewFile(String path) {
-    return null;
+    FSFile file = new FSFile("test_" + UUID.randomUUID() + ".test"); // TODO: Upload a normal file
+    boolean result = fileService.addFSObjectToPath(file, path);
+    return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
   }
 
   @Override

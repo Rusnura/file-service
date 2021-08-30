@@ -18,6 +18,11 @@ public class FileService implements IFileService {
   }
 
   @Override
+  public boolean addFSObjectToPath(FSObject fsObject, String to) {
+    return fileSystem.addFSObjectToPath(fsObject, to);
+  }
+
+  @Override
   public boolean deleteFSObjectByPath(String path) {
     return fileSystem.removeFSObjectByPath(path);
   }
