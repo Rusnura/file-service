@@ -32,6 +32,7 @@ public class FileSystemScanService implements IScanService {
 
   @PostConstruct
   public void init() {
+    fileSystem.addFSObjectToPath(new FSDirectory("home"), "/");
     if (!isScanEnabled)
       return;
     File startDirectory = new File(path);
