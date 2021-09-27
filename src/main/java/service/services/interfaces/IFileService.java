@@ -1,8 +1,6 @@
 package service.services.interfaces;
 
-import service.entities.FSFile;
 import service.entities.FSObject;
-
 import java.util.Optional;
 
 public interface IFileService {
