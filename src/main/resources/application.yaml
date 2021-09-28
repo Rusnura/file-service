@@ -7,5 +7,5 @@ server:
 service:
   scanner:
     enable: true
-    path: D:\\Downloads
+    path: D:\\Guest
     scanTo: /
