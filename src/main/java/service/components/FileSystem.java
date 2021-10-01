@@ -2,20 +2,23 @@ package service.components;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
-import service.validators.FSObjectNameValidator;
 import service.validators.interfaces.IValidator;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class FileSystem {
   private static final Logger LOGGER = LoggerFactory.getLogger(FileSystem.class);
-  private static final IValidator[] NAME_VALIDATORS = new IValidator[] { new FSObjectNameValidator() };
 
   public static final String SEPARATOR = "/";
   public static final FSDirectory ROOT = new FSDirectory("");
+
+  @Autowired
+  private List<IValidator> nameValidators;
 
   public Optional<? extends FSObject> getFSObjectByPath(String path) {
     return getFSObjectByPath(path, FileSystem.ROOT);
@@ -47,7 +50,7 @@ public class FileSystem {
   }
 
   public boolean addFSObjectToPath(FSObject object, String to) {
-    for (IValidator nameValidator : NAME_VALIDATORS) {
+    for (IValidator nameValidator : nameValidators) {
       if (!nameValidator.validate(object))
         throw new IllegalArgumentException("Name '" + object.getName() + "' isn't allowed!");
     }

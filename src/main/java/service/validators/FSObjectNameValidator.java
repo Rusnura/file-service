@@ -1,5 +1,6 @@
 package service.validators;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import service.components.FileSystem;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class FSObjectNameValidator implements IValidator {
   @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
