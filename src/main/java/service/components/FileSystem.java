@@ -26,6 +26,7 @@ public class FileSystem {
   }
 
   public Optional<? extends FSObject> getFSObjectByPath(String path, FSDirectory from) {
+    path = normalizeEndingOfPath(path);
     String[] files = path.split(FileSystem.SEPARATOR, 2);
     if (path.startsWith("//")) {
       return Optional.empty();
@@ -89,5 +90,11 @@ public class FileSystem {
     FSObject fsObject = FSObjectOpt.get();
     FSDirectory parent = fsObject.getParent();
     return parent.getChildren().remove(fsObject);
+  }
+
+  private String normalizeEndingOfPath(String path) {
+    if (path.endsWith(FileSystem.SEPARATOR))
+      return path.substring(0, path.length() - FileSystem.SEPARATOR.length());
+    return path;
   }
 }
