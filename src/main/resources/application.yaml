@@ -7,5 +7,6 @@ server:
 service:
   scanner:
     enable: true
-    path: D:\\Guest
+    path: D:\\
     scanTo: /
+    includeHiddenFiles: false

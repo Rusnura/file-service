@@ -27,6 +27,9 @@ public class FileSystemScanService implements IScanService {
   @Value("${service.scanner.scanTo:/}")
   private String scanTo;
 
+  @Value("${includeHiddenFiles:false}")
+  private boolean includeHiddenFiles;
+
   @Autowired
   private FileSystem fileSystem;
 
@@ -51,6 +54,11 @@ public class FileSystemScanService implements IScanService {
     for (File file: Objects.requireNonNull(directoryToScan.listFiles())) {
       if (!file.canRead()) {
         LOGGER.warn("Can't read file '{}'. Scan it will be skipped!", file.getAbsolutePath());
+        continue;
+      }
+
+      if (!includeHiddenFiles && file.isHidden()) {
+        LOGGER.warn("File '{}' is hidden. Scan it will be skipped!", file.getAbsolutePath());
         continue;
       }
 
