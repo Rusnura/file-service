@@ -56,6 +56,60 @@ public class FileSystemGetFSObject {
   }
 
   @Test
+  public void getFSFileUsingDotsWhenAfterDotsPathPresent() {
+    Optional<? extends FSObject> subdirectory1Opt = fileSystem.getFSObjectByPath("/directory1/subdirectory1/../subdirectory1");
+    Assertions.assertTrue(subdirectory1Opt.isPresent());
+    FSObject subdirectory1 = subdirectory1Opt.get();
+    Assertions.assertEquals("subdirectory1", subdirectory1.getName());
+    Assertions.assertEquals("/directory1/subdirectory1", subdirectory1.getPath());
+  }
+
+  @Test
+  public void getFSFileUsingTwoDotsWhenAfterDotsPathPresent() {
+    Optional<? extends FSObject> directory1Opt = fileSystem.getFSObjectByPath("/directory1/subdirectory1/..");
+    Assertions.assertTrue(directory1Opt.isPresent());
+    FSObject subdirectory1 = directory1Opt.get();
+    Assertions.assertEquals("directory1", subdirectory1.getName());
+    Assertions.assertEquals("/directory1", subdirectory1.getPath());
+  }
+
+  @Test
+  public void getFSFileUsingDotsWhenAfterDotsPathAbsent() {
+    Optional<? extends FSObject> rootOpt = fileSystem.getFSObjectByPath("/directory1/subdirectory1/../..");
+    Assertions.assertTrue(rootOpt.isPresent());
+    FSObject subdirectory1 = rootOpt.get();
+    Assertions.assertEquals("", subdirectory1.getName());
+    Assertions.assertEquals("/", subdirectory1.getPath());
+  }
+
+  @Test
+  public void getFSFileUsingDotsOnly() {
+    Optional<? extends FSObject> rootOpt = fileSystem.getFSObjectByPath("..");
+    Assertions.assertTrue(rootOpt.isPresent());
+    FSObject subdirectory1 = rootOpt.get();
+    Assertions.assertEquals("", subdirectory1.getName());
+    Assertions.assertEquals("/", subdirectory1.getPath());
+  }
+
+  @Test
+  public void getFSFileUsing2DotsOnly() {
+    Optional<? extends FSObject> rootOpt = fileSystem.getFSObjectByPath("../..");
+    Assertions.assertTrue(rootOpt.isPresent());
+    FSObject subdirectory1 = rootOpt.get();
+    Assertions.assertEquals("", subdirectory1.getName());
+    Assertions.assertEquals("/", subdirectory1.getPath());
+  }
+
+  @Test
+  public void getFSFileUsingDotsWhenAfterDotsPathAbsentAndPathWrong() {
+    Optional<? extends FSObject> rootOpt = fileSystem.getFSObjectByPath("/directory1/subdirectory1/../../..");
+    Assertions.assertTrue(rootOpt.isPresent());
+    FSObject subdirectory1 = rootOpt.get();
+    Assertions.assertEquals("", subdirectory1.getName());
+    Assertions.assertEquals("/", subdirectory1.getPath());
+  }
+
+  @Test
   public void getRootDirectory() {
     FSObjectHelper.assertFSObject(fileSystem, "///////////", FSDirectory.class, false);
 

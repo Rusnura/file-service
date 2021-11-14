@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import service.entities.FSDirectory;
 import service.entities.FSObject;
 import service.validators.interfaces.IValidator;
@@ -35,6 +36,12 @@ public class FileSystem {
       if (files.length == 1)
         return Optional.of(FileSystem.ROOT);
       return getFSObjectByPath(files[1], FileSystem.ROOT);
+    }
+
+    if ("..".equals(currentFile)) {
+      if (files.length == 1)
+        return Optional.of((from != null && from.getParent() != null) ? from.getParent() : ROOT);
+      return getFSObjectByPath(files[1], from.getParent());
     }
 
     for (FSObject object : from.getChildren()) {
