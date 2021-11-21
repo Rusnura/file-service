@@ -10,10 +10,10 @@ import javax.servlet.MultipartConfigElement;
 
 @Configuration
 public class FileUploadConfig {
-  @Value("${server.upload.max-file-size-mb}")
+  @Value("${server.upload.max-file-size-mb:150}")
   private String maxUploadFileSize;
 
-  @Value("${server.upload.max-request-size-mb}")
+  @Value("${server.upload.max-request-size-mb:150}")
   private String maxRequestSize;
 
   @Bean
