@@ -63,7 +63,9 @@ public class FileSystemScanService implements IScanService {
       }
 
       if (file.isDirectory()) {
-        boolean fsDirectoryCreation = fileSystem.addFSObjectToPath(new FSDirectory(file.getName()), fsDirectoryPathToAdding);
+        FSDirectory futureDirectory = new FSDirectory(file.getName());
+        futureDirectory.setOriginalPath(file.getAbsolutePath());
+        boolean fsDirectoryCreation = fileSystem.addFSObjectToPath(futureDirectory, fsDirectoryPathToAdding);
         if (!fsDirectoryCreation) {
           LOGGER.warn("Can't create directory with name '{}' in FSDirectory '{}'. Skip...", file.getName(), fsDirectoryPathToAdding);
           continue;
@@ -73,7 +75,9 @@ public class FileSystemScanService implements IScanService {
         else
           scan(file, fsDirectoryPathToAdding + FileSystem.SEPARATOR + file.getName());
       } else {
-        boolean fsFileCreation = fileSystem.addFSObjectToPath(new FSFile(file.getName(), file.toPath()), fsDirectoryPathToAdding);
+        FSFile futureFile = new FSFile(file.getName(), file.toPath());
+        futureFile.setOriginalPath(file.getAbsolutePath());
+        boolean fsFileCreation = fileSystem.addFSObjectToPath(futureFile, fsDirectoryPathToAdding);
         if (!fsFileCreation) {
           LOGGER.warn("Can't create file with name '{}' in FSDirectory '{}'. Skip...", file.getName(), fsDirectoryPathToAdding);
         }
